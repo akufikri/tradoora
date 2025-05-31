@@ -3,6 +3,7 @@ import { Outlet, Link } from "react-router";
 
 import type { Route } from "./+types/MainLayout";
 import { Navbar } from "~/components/common/Navbar";
+import { Footer } from "~/components/common/Footer";
 
 export function meta({}: Route.MetaArgs) {
     return [
@@ -25,6 +26,7 @@ export default function MainLayout() {
       <div>
         <Outlet />
       </div>
+      <Footer/>
     </main>
   );
 }

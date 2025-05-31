@@ -1,252 +1,194 @@
-import { Home, Menu, ShoppingCart, User, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Link } from "react-router";
+import { AlignJustify, Flame, Search, ShoppingCart, User } from "lucide-react";
+import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "../ui/navigation-menu"; // Adjust path based on your shadcn setup
-import { cn } from "~/lib/utils";
-import { Link } from "react-router";
-
-// Sample categories data
-const categories = [
-  {
-    title: "Electronics",
-    href: "/categories/electronics",
-    description: "Latest gadgets and devices.",
-  },
-  {
-    title: "Clothing",
-    href: "/categories/clothing",
-    description: "Fashion for all seasons.",
-  },
-  {
-    title: "Home & Garden",
-    href: "/categories/home-garden",
-    description: "Essentials for your living space.",
-  },
-  {
-    title: "Books",
-    href: "/categories/books",
-    description: "Best sellers and classics.",
-  },
-];
-
-// Custom ListItem component for dropdown items
-const ListItem = ({
-  className,
-  title,
-  children,
-  to,
-  ...props
-}: {
-  className?: string;
-  title: string;
-  children: React.ReactNode;
-  to: string;
-  [key: string]: any;
-}) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <Link
-          to={to}
-          className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-            {children}
-          </p>
-        </Link>
-      </NavigationMenuLink>
-    </li>
-  );
-};
-ListItem.displayName = "ListItem";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
+import { Input } from "../ui/input"; 
 
 export function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <nav
-      className={cn(
-        "fixed w-full z-50 transition-colors duration-300",
-        isScrolled ? "bg-white shadow" : "bg-transparent"
-      )}
-    >
-      <div className="px-4">
-        <div className="flex justify-between h-16 items-center">
-          <div className="flex items-center gap-5">
-            <Link to="/" className="flex-shrink-0">
-              <h1 className="text-2xl font-black italic text-blue-400">
-                Tradoora
-              </h1>
-            </Link>
-            {/* Desktop Menu */}
-            <div className="hidden md:flex items-center space-x-3 text-sm">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <Link to={"/"}>
-                      <NavigationMenuLink
-                        className={cn(
-                          "rounded-full flex items-center flex-row",
-                          isScrolled ? "text-black" : "text-white"
-                        )}
-                      >
-                        Home
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <Link to={"/"}>
-                      <NavigationMenuLink
-                        className={cn(
-                          "rounded-full flex items-center flex-row",
-                          isScrolled ? "text-black" : "text-white"
-                        )}
-                      >
-                        About
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger
-                      className={cn(
-                        "flex items-center gap-2 rounded-full bg-transparent ",
-                        isScrolled
-                          ? "text-black"
-                          : "text-white data-[state=open]:bg-transparent"
-                      )}
-                    >
-                      All Category
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                        {categories.map((category) => (
-                          <ListItem
-                            key={category.title}
-                            title={category.title}
-                            to={category.href}
-                          >
-                            {category.description}
-                          </ListItem>
-                        ))}
-                      </ul>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
-          </div>
-          {/* Right Icons */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link to="/cart">
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  "rounded-full flex items-center flex-row",
-                  isScrolled ? "text-black" : "text-white"
-                )}
-              >
-                <ShoppingCart className="h-5 w-5" />
-              </Button>
-            </Link>
-            <Button
-              variant={"ghost"}
-              className={cn(
-                "rounded-full flex items-center flex-row",
-                isScrolled ? "text-black" : "text-white"
-              )}
-            >
-              <User className="h-5 w-5" />
-              SignIn
-            </Button>
-            <Button className="cursor-pointer rounded-full bg-blue-500 text-white hover:bg-blue-600">
-              Create Account
-            </Button>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
-          </div>
+    <header className="w-full bg-white fixed z-50 lg:px-20 md:px-10 px-5 lg:h-32 h-20 pt-5 shadow">
+      {/* Top bar */}
+      <div className="lg:flex md:flex hidden items-center justify-between w-full mb-5">
+        <div className="flex items-center gap-4">
+          <span className="text-xs">
+            Customer Service: <strong>+1 (800) 123-4567</strong>
+          </span>
+          <span className="text-xs">
+            Free Shipping on Orders Over{" "}
+            <strong className="text-lime-600">$100</strong>
+          </span>
+        </div>
+        <div className="flex items-center gap-4">
+          <Link to={"/"} className="hover:underline text-xs">
+            Help
+          </Link>
+          <Link to={"/"} className="hover:underline text-xs">
+            Track Order
+          </Link>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+      <Separator className="lg:block md:block hidden" />
+
+      {/* Main navbar */}
+      <div className="flex items-center justify-between w-full mt-3">
+        {/* Logo */}
+        <div>
+          <Link to={"/"} className="font-black italic text-2xl text-lime-600">
+            Tradoora
+          </Link>
+        </div>
+
+        {/* Desktop Navigation */}
+        <ul className="lg:flex md:flex hidden items-center text-sm gap-4">
+          <li>
             <Link
-              to="/"
-              className="block px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
-              onClick={() => setIsMenuOpen(false)}
+              className="font-medium text-gray-500 hover:text-accent-foreground"
+              to={"/"}
             >
               Home
             </Link>
+          </li>
+          <li>
             <Link
-              to="/products"
-              className="block px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
-              onClick={() => setIsMenuOpen(false)}
+              className="font-medium text-gray-500 hover:text-accent-foreground"
+              to={"/"}
             >
-              Products
+              Electronics
             </Link>
+          </li>
+          <li>
             <Link
-              to="/categories"
-              className="block px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
-              onClick={() => setIsMenuOpen(false)}
+              className="font-medium text-gray-500 hover:text-accent-foreground"
+              to={"/"}
             >
-              Categories
+              Fashion
             </Link>
+          </li>
+          <li>
             <Link
-              to="/about"
-              className="block px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-md"
-              onClick={() => setIsMenuOpen(false)}
+              className="font-medium text-gray-500 hover:text-accent-foreground"
+              to={"/"}
             >
-              About
+              Flash Sell
             </Link>
-            <div className="flex space-x-4 px-3 py-2">
-              <Button variant={"ghost"} className="cursor-pointer">
-                <User className="h-5 w-5" />
-                SignIn
+          </li>
+        </ul>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2">
+          {/* Search with Sheet */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant={"ghost"}
+                className="hover:cursor-pointer"
+                size={"icon"}
+              >
+                <Search />
               </Button>
-              <Button className="cursor-pointer rounded-full bg-blue-500 text-white hover:bg-blue-600">
-                Create Account
+            </SheetTrigger>
+            <SheetContent side="top" className="w-full lg:max-w-4xl md:max-w-3xl mx-auto rounded-b-3xl">
+              <SheetHeader>
+                <SheetTitle className="text-left text-2xl text-lime-600 font-black italic">
+                  Search Your Fav Product
+                </SheetTitle>
+              </SheetHeader>
+
+              <div className="px-5 pb-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    type="text"
+                    placeholder="Iphone 15 Pro Max"
+                    className="w-full pl-9 placeholder:text-sm text-sm"
+                  />
+                </div>
+                <div className="mt-4">
+                  <div className="text-sm capitalize font-bold flex items-center gap-1">
+                    <Flame className="w-5 h-5 text-red-500"/> <span className="mt-0.5">Popular : </span>
+                  </div>
+                  <div className="grid lg:grid-cols-5 md:grid-cols-4 sm:grid-cols-3 grid-cols-2 mt-2 gap-2">
+                    <Button variant={'outline'}>Iphone 14</Button>
+                    <Button variant={'outline'}>Samsung s24</Button>
+                    <Button variant={'outline'}>Macbook Pro M2</Button>
+                    <Button variant={'outline'}>Iphone 14</Button>
+                    <Button variant={'outline'}>Samsung s24</Button>
+                    <Button variant={'outline'}>Macbook Pro M2</Button>
+                    <Button variant={'default'}>Other</Button>
+                  </div>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+
+          {/* User Icon */}
+          <Button
+            variant={"ghost"}
+            className="hover:cursor-pointer"
+            size={"icon"}
+          >
+            <User />
+          </Button>
+
+          {/* Shopping Cart Icon - Only for desktop */}
+          <Button
+            variant={"ghost"}
+            className="hover:cursor-pointer lg:flex md:flex hidden"
+            size={"icon"}
+          >
+            <ShoppingCart />
+          </Button>
+
+          {/* Mobile Menu with Sheet */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant={"ghost"}
+                className="hover:cursor-pointer lg:hidden md:hidden flex"
+                size={"icon"}
+              >
+                <AlignJustify />
               </Button>
-            </div>
-          </div>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-full">
+              <SheetHeader>
+                <SheetTitle className="text-lime-600 text-2xl font-black italic">
+                  Tradoora
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="mt-1 flex flex-col items-center gap-4 text-sm font-medium px-5">
+                <Link to={"/"} className="text-gray-700 hover:text-primary">
+                  Home
+                </Link>
+                <Link to={"/"} className="text-gray-700 hover:text-primary">
+                  Electronics
+                </Link>
+                <Link to={"/"} className="text-gray-700 hover:text-primary">
+                  Fashion
+                </Link>
+                <Link to={"/"} className="text-gray-700 hover:text-primary">
+                  Flash Sell
+                </Link>
+              </nav>
+
+              <Separator className="my-2" />
+
+              <div className="grid gap-2 px-5">
+                <Button variant="outline">SignIn</Button>
+                <Button>SignUp</Button>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
-      )}
-    </nav>
+      </div>
+    </header>
   );
 }

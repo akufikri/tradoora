@@ -1,43 +1,59 @@
-import { Play, Search } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 
 export function HeroSections() {
-    return (
-        <>
-            <section
-                className="relative bg-[url('https://images.unsplash.com/photo-1739110364550-73d186342344?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')] 
-                        bg-cover bg-center w-full h-[70vh]"
-            >
-                <div className="absolute inset-0 bg-gradient-to-b from-black/80 to-transparent"></div>
-                <div className="absolute inset-0 flex items-center justify-center px-8 sm:px-16">
-                    <div className="text-center">
-                        <h1 className="text-white text-2xl sm:text-4xl font-bold max-w-2xl mx-auto">
-                            The leading B2B ecommerce platform for global trade
-                        </h1>
-                        <div className="my-3 relative max-w-xl mx-auto mt-9">
-                            <Input 
-                                className="bg-white rounded-full placeholder:font-medium h-12 px-5 pr-32" 
-                                placeholder="Iphone 11 PRO MAX"
-                            />
-                            <Button 
-                                className="rounded-full bg-blue-500 hover:bg-blue-600 absolute right-2 top-1/2 -translate-y-1/2"
-                            >
-                                <Search /> Search
-                            </Button>
-                        </div>
-                        <div className="my-3 max-w-xl mx-auto flex gap-4 items-center">
-                            <span className="font-medium text-white">Most searched:</span>
-                            <div className="grid grid-cols-4 gap-3">
-                                <Button variant="outline" size="sm" className="bg-transparent text-white rounded-full font-medium cursor-pointer">Iphone</Button>
-                                <Button variant="outline" size="sm" className="bg-transparent text-white rounded-full font-medium cursor-pointer">Samsung</Button>
-                                <Button variant="outline" size="sm" className="bg-transparent text-white rounded-full font-medium cursor-pointer">Laptop</Button>
-                                <Button variant="outline" size="sm" className="bg-transparent text-white rounded-full font-medium cursor-pointer">iPad</Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </>
-    );
+  return (
+    <main className="w-full min-h-[70vh] relative">
+      <div className="bg-black w-full h-full overflow-hidden relative">
+        <img 
+          className="w-full h-full object-cover opacity-50" 
+          src="https://images.pexels.com/photos/3769747/pexels-photo-3769747.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
+          alt="Baner" 
+        />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+          <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
+            Shop Smarter, <strong className="text-lime-600">Live Better</strong>
+          </h1>
+          <p className="max-w-2xl mb-6 text-white text-sm md:text-base px-4">
+            Discover thousands of products with fast shipping and unbeatable prices. Your one-stop destination for all your shopping needs.
+          </p>
+          <div className="flex gap-2 md:gap-4">
+            <Button size="lg" variant="default" className="bg-lime-600 hover:bg-lime-700 cursor-pointer">
+              Shop Now
+            </Button>
+            <Button size="lg" variant="outline" className="cursor-pointer">
+              Special Offers
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div className="absolute -translate-y-24 w-full px-4">
+        <Card className="max-w-5xl w-full mx-auto">
+          <CardHeader className="flex-col md:flex-row flex justify-between gap-2">
+            <div>
+              <CardTitle>Shop by Category</CardTitle>
+              <CardDescription>
+                Browse our wide selection of products by category
+              </CardDescription>
+            </div>
+            <Button variant={"link"}>View All Categories</Button>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {/* Repeat this Card 10 times */}
+            {[...Array(10)].map((_, index) => (
+              <Card key={index} className="p-2 flex items-center gap-3 flex-row">
+                <Avatar className="rounded-lg">
+                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarFallback>Iphone</AvatarFallback>
+                </Avatar>
+                <CardDescription>Electronic</CardDescription>
+              </Card>
+            ))}
+          </CardContent>
+          <CardFooter></CardFooter>
+        </Card>
+      </div>
+    </main>
+  );
 }
