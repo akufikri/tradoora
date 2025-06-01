@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { AlignJustify, Flame, Search, ShoppingCart, User } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
@@ -12,6 +12,11 @@ import {
 import { Input } from "../ui/input"; 
 
 export function Navbar() {
+  const navigate = useNavigate();
+
+  const handleRedirectQty = () => {
+    navigate("/cart")
+  }
   return (
     <header className="w-full bg-white fixed z-50 lg:px-20 md:px-10 px-5 lg:h-32 h-20 pt-5 shadow">
       {/* Top bar */}
@@ -140,6 +145,7 @@ export function Navbar() {
 
           {/* Shopping Cart Icon - Only for desktop */}
           <Button
+            onClick={handleRedirectQty}
             variant={"ghost"}
             className="hover:cursor-pointer lg:flex md:flex hidden"
             size={"icon"}
