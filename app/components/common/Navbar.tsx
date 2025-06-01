@@ -59,7 +59,7 @@ export function Navbar() {
           <li>
             <Link
               className="font-medium text-gray-500 hover:text-accent-foreground"
-              to={"/"}
+              to={"/product"}
             >
               Electronics
             </Link>
@@ -67,7 +67,7 @@ export function Navbar() {
           <li>
             <Link
               className="font-medium text-gray-500 hover:text-accent-foreground"
-              to={"/"}
+              to={"/product"}
             >
               Fashion
             </Link>
@@ -75,7 +75,7 @@ export function Navbar() {
           <li>
             <Link
               className="font-medium text-gray-500 hover:text-accent-foreground"
-              to={"/"}
+              to={"/product"}
             >
               Flash Sell
             </Link>
