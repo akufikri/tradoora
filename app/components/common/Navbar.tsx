@@ -18,7 +18,7 @@ export function Navbar() {
     navigate("/cart")
   }
   return (
-    <header className="w-full bg-white fixed z-50 lg:px-20 md:px-10 px-5 lg:h-32 h-20 pt-5 shadow">
+    <header className="w-full bg-white fixed z-50 lg:px-20 md:px-10 px-5 lg:h-32 md:h-28 h-22 pt-5 shadow">
       {/* Top bar */}
       <div className="lg:flex md:flex hidden items-center justify-between w-full mb-5">
         <div className="flex items-center gap-4">

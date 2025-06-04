@@ -1,6 +1,5 @@
-// fe-tradoora/src/routes/products/$slug.tsx
 import { useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import { Heart, Minus, Plus, Share2, ShoppingCart, Star } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
@@ -26,18 +25,42 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Textarea } from "~/components/ui/textarea";
 import { trpc } from "~/lib/trpc";
 import { Skeleton } from "~/components/ui/skeleton";
+import { ProductCard } from "~/components/common/ProductCard";
+import type { ProductType } from "~/types/product";
 
 export default function DetailProduct() {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [counterQty, setCounterQty] = useState(1);
 
-  // Fetch product details
   const {
     data: product,
     isLoading,
     error,
   } = trpc.product.getBySlug.useQuery({ slug: slug! }, { enabled: !!slug });
+
+  const {
+    data: relatedProductsData,
+    isLoading: relatedIsLoading,
+  } = trpc.product.list.useQuery(
+    { categoryId: product?.category?.id },
+    {
+      enabled: !!product && !!product.category?.id,
+    }
+  );
+
+  let relatedProductsToDisplay: ProductType[] = [];
+  if (product && relatedProductsData) {
+    relatedProductsToDisplay = relatedProductsData
+      .filter(p => p.id !== product.id)
+      .slice(0, 4);
+  }
+
+  const handleProductNavigation = (productSlug: string) => {
+    navigate(`/product/${productSlug}`);
+    window.scrollTo(0, 0);
+  };
 
   const handleIncrement = () => {
     setCounterQty((prev) => prev + 1);
@@ -51,17 +74,17 @@ export default function DetailProduct() {
     return (
       <main className="max-w-7xl w-full mx-auto py-20 px-4 md:px-3 lg:px-0 lg:pt-42 pt-20 pb-20">
         <div className="flex gap-10">
-          <Skeleton className="w-[350px] h-[350px]"/>
+          <Skeleton className="w-[350px] h-[350px]" />
           <div className="flex flex-col gap-3">
-            <Skeleton className="w-[200px] h-9"/>
-            <Skeleton className="w-[300px] h-9"/>
-            <Skeleton className="w-[350px] h-8"/>
+            <Skeleton className="w-[200px] h-9" />
+            <Skeleton className="w-[300px] h-9" />
+            <Skeleton className="w-[350px] h-8" />
             <div className="mt-4 flex flex-col gap-3">
-              <Skeleton className="w-[150px] h-8"/>
-              <Skeleton className="w-[190px] h-12"/>
+              <Skeleton className="w-[150px] h-8" />
+              <Skeleton className="w-[190px] h-12" />
               <div className="flex flex-row gap-3">
-                <Skeleton className="w-[109px] h-12"/>
-                <Skeleton className="w-[109px] h-12"/>
+                <Skeleton className="w-[109px] h-12" />
+                <Skeleton className="w-[109px] h-12" />
               </div>
             </div>
           </div>
@@ -95,8 +118,8 @@ export default function DetailProduct() {
   return (
     <main className="max-w-6xl w-full mx-auto lg:pt-42 pt-20 pb-20 lg:px-0 md:px-3 px-4">
       <div className="flex gap-10 lg:flex-row flex-col">
-        <Card className="w-[350px] h-[350px] overflow-hidden cursor-zoom-in">
-          <CardContent className="overflow-hidden">
+        <Card className="w-full max-w-[350px] h-[350px] overflow-hidden cursor-zoom-in shrink-0">
+          <CardContent className="p-0 h-full">
             <img
               src={product?.imageUrl ?? "https://via.placeholder.com/400"}
               alt={product?.name ?? "Product"}
@@ -104,7 +127,7 @@ export default function DetailProduct() {
             />
           </CardContent>
         </Card>
-        <div className="space-y-2">
+        <div className="space-y-2 flex-grow">
           <h2 className="text-lg font-bold">{product?.name}</h2>
           <h1 className="text-2xl font-bold">
             Rp {Number(product?.price).toLocaleString("id-ID")}
@@ -139,28 +162,27 @@ export default function DetailProduct() {
           </div>
           <div className="flex items-center gap-3 mt-4 lg:flex-row md:flex-row flex-col">
             <Button className="bg-amber-600 hover:bg-amber-500 lg:w-auto md:w-auto w-full">
-              <ShoppingCart /> Add To Cart
+              <ShoppingCart className="mr-2 h-4 w-4" /> Add To Cart
             </Button>
             <Button variant="outline" className="lg:w-auto md:w-auto w-full">
-              <Heart /> Wishlist
+              <Heart className="mr-2 h-4 w-4" /> Wishlist
             </Button>
             <Button variant="outline" className="lg:w-auto md:w-auto w-full">
+              <Share2 className="mr-2 h-4 w-4 lg:mr-0 md:mr-0" />
               <span className="lg:hidden md:hidden block">Share</span>
-              <Share2 />
             </Button>
           </div>
         </div>
       </div>
-      {/* Description and Tabs */}
       <div className="mt-7">
-        <Tabs defaultValue="description" className="lg:w-[1200px] md:w-[700px]">
+        <Tabs defaultValue="description" className="w-full">
           <TabsList>
             <TabsTrigger value="description">Description</TabsTrigger>
             <TabsTrigger value="spesification">Specification</TabsTrigger>
             <TabsTrigger value="review">Review</TabsTrigger>
           </TabsList>
           <TabsContent value="description">
-            <p className="text-sm md:text-base leading-7 text-gray-700 max-w-prose mt-4 w-full lg:w-auto">
+            <p className="text-sm md:text-base leading-7 text-gray-700 max-w-prose mt-4 w-full">
               {product?.description}
             </p>
           </TabsContent>
@@ -181,13 +203,16 @@ export default function DetailProduct() {
                   <TableCell className="font-medium">Minimum Order</TableCell>
                   <TableCell>{product?.minimumOrderQuantity} unit(s)</TableCell>
                 </TableRow>
-                {/* Add more dynamic specs if available in product data */}
+                <TableRow>
+                  <TableCell className="font-medium">Category</TableCell>
+                  <TableCell>{product?.category?.name}</TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </TabsContent>
           <TabsContent value="review">
             <div className="flex gap-3 lg:flex-row md:flex-row flex-col">
-              <Card className="lg:w-72 w-full h-80">
+              <Card className="lg:w-72 w-full h-fit">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-1">
                     <Star className="w-5 h-5 text-green-500 fill-green-500" />
@@ -271,11 +296,12 @@ export default function DetailProduct() {
                         <div className="flex items-center gap-2">
                           <span className="text-sm">Your Rating:</span>
                           <div className="flex gap-1">
-                            <Star className="w-5 h-5 text-gray-300 hover:text-green-500 hover:fill-green-500 cursor-pointer" />
-                            <Star className="w-5 h-5 text-gray-300 hover:text-green-500 hover:fill-green-500 cursor-pointer" />
-                            <Star className="w-5 h-5 text-gray-300 hover:text-green-500 hover:fill-green-500 cursor-pointer" />
-                            <Star className="w-5 h-5 text-gray-300 hover:text-green-500 hover:fill-green-500 cursor-pointer" />
-                            <Star className="w-5 h-5 text-gray-300 hover:text-green-500 hover:fill-green-500 cursor-pointer" />
+                            {[1, 2, 3, 4, 5].map((starRating) => (
+                              <Star
+                                key={starRating}
+                                className="w-5 h-5 text-gray-300 hover:text-green-500 hover:fill-green-500 cursor-pointer"
+                              />
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -297,22 +323,22 @@ export default function DetailProduct() {
                     </CardContent>
                   </Card>
                 )}
-                {/* Static reviews (to be replaced with dynamic data later) */}
                 <Card>
                   <CardContent className="py-4">
                     <div className="flex justify-between">
                       <div className="flex gap-2">
-                        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-semibold">
                           JD
                         </div>
                         <div>
                           <h4 className="font-semibold">John Doe</h4>
                           <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 text-green-500 fill-green-500" />
-                            <Star className="w-4 h-4 text-green-500 fill-green-500" />
-                            <Star className="w-4 h-4 text-green-500 fill-green-500" />
-                            <Star className="w-4 h-4 text-green-500 fill-green-500" />
-                            <Star className="w-4 h-4 text-green-500 fill-green-500" />
+                            {[1, 2, 3, 4, 5].map((starRating) => (
+                              <Star
+                                key={starRating}
+                                className="w-4 h-4 text-green-500 fill-green-500"
+                              />
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -330,16 +356,18 @@ export default function DetailProduct() {
                   <CardContent className="py-4">
                     <div className="flex justify-between">
                       <div className="flex gap-2">
-                        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-sm font-semibold">
                           AS
                         </div>
                         <div>
                           <h4 className="font-semibold">Alice Smith</h4>
                           <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 text-green-500 fill-green-500" />
-                            <Star className="w-4 h-4 text-green-500 fill-green-500" />
-                            <Star className="w-4 h-4 text-green-500 fill-green-500" />
-                            <Star className="w-4 h-4 text-green-500 fill-green-500" />
+                            {[1, 2, 3, 4].map((starRating) => (
+                              <Star
+                                key={starRating}
+                                className="w-4 h-4 text-green-500 fill-green-500"
+                              />
+                            ))}
                             <Star className="w-4 h-4 text-green-500" />
                           </div>
                         </div>
@@ -359,44 +387,42 @@ export default function DetailProduct() {
           </TabsContent>
         </Tabs>
       </div>
-      {/* Related Products (Static for now, can be made dynamic later) */}
-      <Separator className="my-10" />
-      <div>
-        <h1 className="text-2xl font-bold">Related Products</h1>
-        <CardDescription>You might also like these products</CardDescription>
-        <div className="grid grid-cols-2 mt-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
-          <div className="rounded overflow-hidden">
-            <div className="relative group">
-              <img
-                className="object-cover w-full h-48 sm:h-full"
-                src="https://images.pexels.com/photos/3394650/pexels-photo-3394650.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                alt="Wireless Bluetooth Headphones"
-              />
-              <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button
-                  size="icon"
-                  variant="outline"
-                  className="rounded-full border-0 bg-white hover:bg-gray-100"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                </Button>
+
+      {product && product.category?.id && (
+        <>
+          <Separator className="my-10" />
+          <div>
+            <h1 className="text-2xl font-bold mb-1">Related Products</h1>
+            <CardDescription className="mb-5">
+              You might also like these products
+            </CardDescription>
+            {relatedIsLoading && !relatedProductsToDisplay.length && (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+                {[...Array(4)].map((_, i) => (
+                  <Skeleton key={i} className="w-full h-[280px] rounded-lg" />
+                ))}
               </div>
-            </div>
-            <div className="mt-3 space-y-2">
-              <CardDescription className="text-sm cursor-pointer hover:underline">
-                Wireless Bluetooth Headphones
-              </CardDescription>
-              <CardTitle className="text-base md:text-lg">Rp 250.000</CardTitle>
-              <div className="flex items-center gap-1.5 text-gray-400">
-                <Star className="text-green-400 fill-green-400 w-4 h-4" />
-                <span className="text-xs md:text-sm font-medium">4.9</span>-
-                <span className="text-xs md:text-sm">100+ stock ready</span>
+            )}
+            {!relatedIsLoading && relatedProductsToDisplay.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+                {relatedProductsToDisplay.map((relatedProd) => (
+                  <ProductCard
+                    key={relatedProd.id}
+                    product={relatedProd}
+                    onNavigate={handleProductNavigation}
+                  />
+                ))}
               </div>
-            </div>
+            )}
+            {!relatedIsLoading && relatedProductsToDisplay.length === 0 && relatedProductsData && relatedProductsData.length > 0 && (
+              <p className="text-sm text-muted-foreground">No other related products found in this category.</p>
+            )}
+             {!relatedIsLoading && (!relatedProductsData || relatedProductsData.length === 0) && (
+              <p className="text-sm text-muted-foreground">No related products found in this category.</p>
+            )}
           </div>
-          {/* Add more static related products as needed */}
-        </div>
-      </div>
+        </>
+      )}
     </main>
   );
 }

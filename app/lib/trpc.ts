@@ -1,6 +1,5 @@
-// fe-tradoora/src/lib/trpc.ts
 import { createTRPCReact } from '@trpc/react-query';
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import { createTRPCClient, httpLink } from '@trpc/client';
 import { QueryClient } from '@tanstack/react-query';
 import { type AppRouter } from '@tradoora/shared';
 
@@ -16,7 +15,7 @@ export const queryClient = new QueryClient({
 
 export const trpcClient = createTRPCClient<AppRouter>({
   links: [
-    httpBatchLink({
+    httpLink({
       url: 'http://localhost:3000/trpc',
     }),
   ],
