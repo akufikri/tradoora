@@ -20,15 +20,22 @@ export default function UserLayout() {
     }
   );
 
-  useEffect(() => {
-    if (!isLoadingUser && (!userData || !userData.success)) {
-      toast.error("Session expired or unauthorized. Please login again.");
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("userData");
-      utils.user.me.invalidate();
-      navigate("/login", { replace: true });
+useEffect(() => {
+  if (!isLoadingUser) {
+    if (!userData || !userData.success) {
+      const timer = setTimeout(() => {
+        if (!utils.user.me.getData()?.success) { 
+          toast.error("Session expired or unauthorized. Please login again.");
+          localStorage.removeItem("authToken");
+          localStorage.removeItem("userData");
+          utils.user.me.invalidate(); 
+          navigate("/login", { replace: true });
+        }
+      }, 100); 
+      return () => clearTimeout(timer);
     }
-  }, [isLoadingUser, userData, navigate, utils]);
+  }
+}, [isLoadingUser, userData, navigate, utils]);
 
   const logoutMutation = trpc.user.logout.useMutation({
     onSuccess: (data) => {

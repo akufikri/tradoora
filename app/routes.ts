@@ -11,5 +11,7 @@ export default [
     route('/register', 'routes/auth/register.tsx'),
     layout("layouts/UserLayout.tsx", [
         route("/auth/welcome", "routes/user/index.tsx")
-    ])
+    ]),
+    route("/success", 'routes/payment/success.tsx'),
+    route("/failed", 'routes/payment/error.tsx')
 ] satisfies RouteConfig;

@@ -11,6 +11,7 @@ export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState<string | null>(null);
+    const utils = trpc.useUtils();
 
     const loginMutation = trpc.user.login.useMutation({
         onSuccess: (data) => {
@@ -24,6 +25,9 @@ export default function LoginForm() {
                 if ("user" in data && data.user) {
                     localStorage.setItem('userData', JSON.stringify(data.user));
                 }
+                
+                utils.user.me.invalidate(); 
+                
                 toast.success(data.message || "Login successful!");
                 navigate('/auth/welcome');
             } else {
