@@ -3,6 +3,5 @@ import type { AppRouter } from '@tradoora/shared';
 
 type RouterOutputs = inferRouterOutputs<AppRouter>;
 
-export type CategoriesListResponse = RouterOutputs['category']['list']; 
-
-export type CategoryListItemType = CategoriesListResponse[number]; 
+export type CheckoutType = RouterOutputs['transaction']['checkout'];
+export type ListByUser = RouterOutputs['transaction']['listByUser'];

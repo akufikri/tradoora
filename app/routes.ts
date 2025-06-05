@@ -8,5 +8,8 @@ export default [
         route("/cart", "routes/cart.tsx")
     ]),
     route('/login', 'routes/auth/login.tsx'),
-    route('/register', 'routes/auth/register.tsx')
+    route('/register', 'routes/auth/register.tsx'),
+    layout("layouts/UserLayout.tsx", [
+        route("/auth/welcome", "routes/user/index.tsx")
+    ])
 ] satisfies RouteConfig;

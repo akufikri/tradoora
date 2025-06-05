@@ -10,6 +10,7 @@ import type { Route } from "./+types/root";
 import { trpc, queryClient, trpcClient } from "./lib/trpc"; // Impor dari trpc.ts
 import { QueryClientProvider } from '@tanstack/react-query';
 import "./app.css";
+import { Toaster } from 'react-hot-toast';
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -33,7 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="bg-teal-50">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -47,6 +48,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         <Outlet />
+        <Toaster position="top-right" reverseOrder={false} /> 
       </trpc.Provider>
     </QueryClientProvider>
   );

@@ -40,7 +40,6 @@ export function HeroSections() {
             <Button variant={"link"}>View All Categories</Button>
           </CardHeader>
           <CardContent className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {/* Repeat this Card 10 times */}
             {[...Array(10)].map((_, index) => (
               <Card key={index} className="p-2 flex items-center gap-3 flex-row">
                 <Avatar className="rounded-lg">

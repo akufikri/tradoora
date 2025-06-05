@@ -10,7 +10,7 @@ import { useNavigate } from "react-router";
 const DEFAULT_MIN_PRICE = 0;
 const DEFAULT_MAX_PRICE = 50000000;
 
-export function BestSeller() {
+export function NewProduct() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined);
@@ -41,14 +41,15 @@ export function BestSeller() {
 
   return (
     <section className="w-full h-auto max-w-6xl mx-auto lg:px-4 px-0 pt-5">
-      <div className="my-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="my-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
         <div>
-          <h1 className="text-lg md:text-xl font-bold">Best Sellers</h1>
-          <span className="text-gray-500 text-sm md:text-base">
-            Our most popular products based on sales
+          <h1 className="text-lg sm:text-xl font-bold">New Products</h1>
+          <span className="text-gray-500 text-sm sm:text-base">
+            Discover our latest collection of products selected especially for
+            you.
           </span>
         </div>
-        <Button variant={"link"} onClick={handleViewAll}>
+        <Button variant={"link"} className="px-0 sm:px-4" onClick={handleViewAll}>
           View All <ArrowRight className="ml-2" />
         </Button>
       </div>
